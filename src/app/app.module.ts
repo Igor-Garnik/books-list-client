@@ -9,6 +9,13 @@ import { NavigationComponent } from './navigation/navigation.component';
 import { ShowcaseComponent } from './showcase/showcase.component';
 import { SearchComponent } from './search/search.component';
 
+import { HttpClientModule } from '@angular/common/http';
+import { BookApiService } from './shared/services/bookApi.service';
+import { UtilsService } from './shared/services/utils.service';
+
+import { FormsModule } from '@angular/forms';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,9 +27,11 @@ import { SearchComponent } from './search/search.component';
   imports: [
     AppRoutingModule,
     BrowserModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule,
+    FormsModule
   ],
-  providers: [],
+  providers: [BookApiService, UtilsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

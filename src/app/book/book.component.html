@@ -1,83 +1,153 @@
 <div class="form-wrapper">
 
-  <form>
+  <!-- completed form -->
 
-    <h3 class="mb-4">Book Info</h3>
+  <div *ngIf="book">
 
-    <div class="form-group">
-      <label for="author">Author</label>
-      <input class="form-control" id="author">
-    </div>
+    <form>
 
-    <div class="form-group">
-      <label for="title">Title</label>
-      <input class="form-control" id="title">
-    </div>
+      <h3 class="mb-4">Book Info</h3>
 
-    <div class="form-group">
-      <label for="isbn">ISBN</label>
-      <input class="form-control" id="isbn">
-    </div>
+      <div class="form-group">
+        <label for="author">Author</label>
+        <input class="form-control" id="author" value="{{book.author}}" disabled>
+      </div>
 
-    <div class="form-group">
-      <label for="pages">Number of Pages</label>
-      <input class="form-control" id="pages">
-    </div>
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input class="form-control" id="title" value="{{book.title}}" disabled>
+      </div>
 
-    <div class="form-group">
-      <label for="format">Format</label>
-      <select class="form-control" id="format">
-        <option>Paperback</option>
-        <option>Hardcover</option>
-        <option>Audiobook</option>
-        <option>Leather Bound</option>
-        <option>Spiral Bound</option>
-      </select>
-    </div>
+      <div class="form-group">
+        <label for="isbn">ISBN</label>
+        <input class="form-control" id="isbn" value="{{book.isbn}}" disabled>
+      </div>
 
-    <div class="form-group">
-      <label for="description">Description</label>
-      <textarea class="form-control" id="description" rows="3"></textarea>
-    </div>
+      <div class="form-group">
+        <label for="pages">Number of Pages</label>
+        <input class="form-control" id="pages" value="{{book.pages}}" disabled>
+      </div>
 
-    <div class="form-group">
-      <label for="price">Price</label>
-      <input class="form-control" id="price">
-    </div>
+      <div class="form-group">
+        <label for="format">Format</label>
+        <input class="form-control" id="format" value="{{bookFormat}}" disabled>
+      </div>
 
-    <hr class="m-1 mb-5 mt-5">
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" rows="3" disabled>{{book.description}}</textarea>
+      </div>
 
-    <h3 class="mb-4">Publisher Info</h3>
+      <div class="form-group">
+        <label for="price">Price</label>
+        <input class="form-control" id="price" value="{{book.price}}" disabled>
+      </div>
 
-    <div class="form-group">
-      <label for="country">Country</label>
-      <select class="form-control" id="country">
-        <option>Country #1</option>
-        <option>Country #2</option>
-        <option>Country #3</option>
-      </select>
-    </div>
+    </form>
 
-    <div class="form-group">
-      <label for="city">City</label>
-      <select class="form-control" id="city">
-        <option>City #1</option>
-        <option>City #2</option>
-        <option>City #3</option>
-      </select>
-    </div>
+  </div>
 
-    <div class="form-group">
-      <label for="company">Company</label>
-      <select class="form-control" id="company">
-        <option>Company #1</option>
-        <option>Company #2</option>
-        <option>Company #3</option>
-      </select>
-    </div>
+  <!-- blank form -->
 
-    <button type="submit" class="btn btn-primary mt-4">Submit</button>
+  <div *ngIf="!book">
 
-  </form>
+    <form>
+
+      <h3 class="mb-4">Book Info</h3>
+
+      <div class="form-group">
+        <label for="author">Author</label>
+        <input class="form-control" id="author" name="author" [(ngModel)]="
+        attrConfig.author" #author="ngModel" required autocomplete="off">
+        <div [hidden]="author.valid || author.untouched" class="alert alert-danger">
+          Author required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input class="form-control" id="title" [(ngModel)]="
+        attrConfig.title" #title="ngModel" name="title" required autocomplete="off">
+        <div [hidden]="title.valid || title.untouched" class="alert alert-danger">
+          Book title required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="isbn">ISBN</label>
+        <input class="form-control" id="isbn" [(ngModel)]="
+        attrConfig.isbn" #isbn="ngModel" name="isbn" required autocomplete="off">
+        <div [hidden]="isbn.valid || isbn.untouched" class="alert alert-danger">
+          ISBN required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="pages">Number of Pages</label>
+        <input class="form-control" id="pages" [(ngModel)]="
+        attrConfig.pages" #pages="ngModel" name="pages" required autocomplete="off">
+        <div [hidden]="pages.valid || pages.untouched" class="alert alert-danger">
+          Pages required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="format">Format</label>
+        <select class="form-control" id="format" [(ngModel)]="selectedformat" (ngModelChange)="setAttribute($event, formats, attributeName[3])"
+          name="formats">
+          <option *ngFor="let format of formats">{{format.name}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea class="form-control" id="description" rows="3" [(ngModel)]="attrConfig.description" #description="ngModel" name="description"
+          required></textarea>
+        <div [hidden]="description.valid || description.untouched" class="alert alert-danger">
+          Description required
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="price">Price</label>
+        <input class="form-control" id="price" [(ngModel)]="attrConfig.price" #price="ngModel" name="price" required autocomplete="off">
+        <div [hidden]="price.valid || price.untouched" class="alert alert-danger">
+          Price required
+        </div>
+      </div>
+
+      <hr class="m-1 mb-5 mt-5">
+
+      <h3 class="mb-4">Publisher Info</h3>
+
+      <div class="form-group">
+        <label for="country">Country</label>
+        <select class="form-control" id="country" [(ngModel)]="selectedcountriy" (ngModelChange)="setAttribute($event, countries, attributeName[1])"
+          name="countries">
+          <option *ngFor="let country of countries">{{country.name}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="city">City</label>
+        <select class="form-control" id="city" [(ngModel)]="selectedcity" (ngModelChange)="setAttribute($event, cities, attributeName[2])"
+          name="cities">
+          <option *ngFor="let city of cities">{{city.name}}</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="company">Company</label>
+        <select class="form-control" id="company" [(ngModel)]="selectedcompany" (ngModelChange)="setAttribute($event, companies, attributeName[0])"
+          name="companies">
+          <option *ngFor="let company of companies">{{company.name}}</option>
+        </select>
+      </div>
+
+      <button [disabled]="author.invalid || title.invalid || isbn.invalid || pages.invalid || description.invalid || price.invalid "
+        class="btn btn-primary mt-4" (click)="addBook()">Добавить</button>
+    </form>
+
+  </div>
 
 </div>
