@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'book/new', component: BookComponent },
   { path: 'book/:id', component: BookComponent },
   { path: 'search', component: SearchComponent },
+  //{ path: 'search', component: ShowcaseComponent },
   { path: '**', redirectTo: '/showcase', pathMatch: 'full' }
 ];
 
@@ -17,4 +18,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule  { }
+export class AppRoutingModule { }

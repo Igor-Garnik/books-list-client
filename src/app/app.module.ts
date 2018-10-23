@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BookApiService } from './shared/services/bookApi.service';
 import { UtilsService } from './shared/services/utils.service';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -29,7 +29,8 @@ import { FormsModule } from '@angular/forms';
     BrowserModule,
     RouterModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [BookApiService, UtilsService],
   bootstrap: [AppComponent]

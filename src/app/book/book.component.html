@@ -2,7 +2,7 @@
 
   <!-- completed form -->
 
-  <div *ngIf="book">
+  <div *ngIf="viewComplitedForm">
 
     <form>
 
@@ -49,70 +49,67 @@
 
   <!-- blank form -->
 
-  <div *ngIf="!book">
+  <div *ngIf="viewEmptyForm">
 
-    <form>
+    <form [formGroup]="newBookForm" (ngSubmit)="submit()">
 
       <h3 class="mb-4">Book Info</h3>
 
       <div class="form-group">
         <label for="author">Author</label>
-        <input class="form-control" id="author" name="author" [(ngModel)]="
-        attrConfig.author" #author="ngModel" required autocomplete="off">
-        <div [hidden]="author.valid || author.untouched" class="alert alert-danger">
-          Author required
+        <input class="form-control" id="author" autocomplete="off" formControlName="author">
+        <div *ngIf="formErrors.author" class="error">
+          {{ formErrors.author}}
         </div>
       </div>
 
       <div class="form-group">
         <label for="title">Title</label>
-        <input class="form-control" id="title" [(ngModel)]="
-        attrConfig.title" #title="ngModel" name="title" required autocomplete="off">
-        <div [hidden]="title.valid || title.untouched" class="alert alert-danger">
-          Book title required
+        <input class="form-control" id="title" formControlName="title" autocomplete="off">
+        <div *ngIf="formErrors.title" class="error">
+          {{ formErrors.title}}
         </div>
       </div>
 
       <div class="form-group">
         <label for="isbn">ISBN</label>
-        <input class="form-control" id="isbn" [(ngModel)]="
-        attrConfig.isbn" #isbn="ngModel" name="isbn" required autocomplete="off">
-        <div [hidden]="isbn.valid || isbn.untouched" class="alert alert-danger">
-          ISBN required
+        <input class="form-control" id="isbn" formControlName="isbn" autocomplete="off">
+        <div *ngIf="formErrors.isbn" class="error">
+          {{ formErrors.isbn}}
         </div>
       </div>
 
       <div class="form-group">
         <label for="pages">Number of Pages</label>
-        <input class="form-control" id="pages" [(ngModel)]="
-        attrConfig.pages" #pages="ngModel" name="pages" required autocomplete="off">
-        <div [hidden]="pages.valid || pages.untouched" class="alert alert-danger">
-          Pages required
+        <input class="form-control" id="pages" formControlName="pages" autocomplete="off">
+        <div *ngIf="formErrors.pages" class="error">
+          {{ formErrors.pages}}
         </div>
       </div>
 
       <div class="form-group">
         <label for="format">Format</label>
-        <select class="form-control" id="format" [(ngModel)]="selectedformat" (ngModelChange)="setAttribute($event, formats, attributeName[3])"
-          name="formats">
-          <option *ngFor="let format of formats">{{format.name}}</option>
+        <select class="form-control" id="format" formControlName="formatId">
+          <option *ngFor="let format of formats" [ngValue]="format.name">{{format.name}}</option>
         </select>
+        <div *ngIf="formErrors.formatId" class="error">
+          {{ formErrors.formatId}}
+        </div>
       </div>
 
       <div class="form-group">
         <label for="description">Description</label>
-        <textarea class="form-control" id="description" rows="3" [(ngModel)]="attrConfig.description" #description="ngModel" name="description"
-          required></textarea>
-        <div [hidden]="description.valid || description.untouched" class="alert alert-danger">
-          Description required
+        <textarea class="form-control" id="description" rows="3" formControlName="description" required></textarea>
+        <div *ngIf="formErrors.description" class="error">
+          {{ formErrors.description}}
         </div>
       </div>
 
       <div class="form-group">
         <label for="price">Price</label>
-        <input class="form-control" id="price" [(ngModel)]="attrConfig.price" #price="ngModel" name="price" required autocomplete="off">
-        <div [hidden]="price.valid || price.untouched" class="alert alert-danger">
-          Price required
+        <input class="form-control" id="price" formControlName="price" autocomplete="off">
+        <div *ngIf="formErrors.price" class="error">
+          {{ formErrors.price}}
         </div>
       </div>
 
@@ -122,30 +119,36 @@
 
       <div class="form-group">
         <label for="country">Country</label>
-        <select class="form-control" id="country" [(ngModel)]="selectedcountriy" (ngModelChange)="setAttribute($event, countries, attributeName[1])"
-          name="countries">
-          <option *ngFor="let country of countries">{{country.name}}</option>
+        <select class="form-control" id="country" formControlName="countryId">
+          <option *ngFor="let country of countries" [ngValue]="country.name">{{country.name}}</option>
         </select>
+        <div *ngIf="formErrors.countryId" class="error">
+          {{ formErrors.countryId}}
+        </div>
       </div>
 
       <div class="form-group">
         <label for="city">City</label>
-        <select class="form-control" id="city" [(ngModel)]="selectedcity" (ngModelChange)="setAttribute($event, cities, attributeName[2])"
-          name="cities">
-          <option *ngFor="let city of cities">{{city.name}}</option>
+        <select class="form-control" id="city" formControlName="cityId">
+          <option *ngFor="let city of cities" [ngValue]="city.name">{{city.name}}</option>
         </select>
+        <div *ngIf="formErrors.cityId" class="error">
+          {{ formErrors.cityId}}
+        </div>
       </div>
 
       <div class="form-group">
         <label for="company">Company</label>
-        <select class="form-control" id="company" [(ngModel)]="selectedcompany" (ngModelChange)="setAttribute($event, companies, attributeName[0])"
-          name="companies">
-          <option *ngFor="let company of companies">{{company.name}}</option>
+        <select class="form-control" id="company" formControlName="companyId">
+          <option *ngFor="let company of companies" [ngValue]="company.name">{{company.name}}</option>
         </select>
+        <div *ngIf="formErrors.companyId" class="error">
+          {{ formErrors.companyId}}
+        </div>
       </div>
 
-      <button [disabled]="author.invalid || title.invalid || isbn.invalid || pages.invalid || description.invalid || price.invalid "
-        class="btn btn-primary mt-4" (click)="addBook()">Добавить</button>
+      <!-- <button type="submit" [disabled]="!newBookForm.valid" class="btn btn-primary mt-4">Добавить</button> -->
+      <button type="submit" class="btn btn-primary mt-4">Add new book</button>
     </form>
 
   </div>

@@ -1,7 +1,8 @@
 <div class="container">
   <h3 class="text-center">List Of Books</h3>
-  <ul *ngFor="let book of booksList">
-    <a [routerLink]="['/book/' + book._id]"><li>{{book.title}}</li></a>
+  <ul *ngFor="let book of booksList; let i = index">
+    <a [routerLink]="['/book/' + book._id ]" [queryParams]="{'name': book.title}"><li>{{i+1}}.<span></span>
+        {{book.title}}</li></a>
 
   </ul>
 </div>

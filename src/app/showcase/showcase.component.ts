@@ -4,8 +4,10 @@ import { Book } from '../shared/models/book';
 
 @Component({
   selector: 'app-showcase',
-  templateUrl: './showcase.component.html'
+  templateUrl: './showcase.component.html',
+  styleUrls: ['./showcase.component.css']
 })
+
 export class ShowcaseComponent implements OnInit {
 
   booksList: Array<Book> = [];
@@ -18,11 +20,7 @@ export class ShowcaseComponent implements OnInit {
     this.bookApiService.getBooksList()
       .subscribe((list: Array<Book>) => {
         this.booksList = list
-      },
-        error => {
-          console.error(error);
-        }
-      )
+      })
   }
 
 

@@ -3,7 +3,7 @@
   <div class="row">
 
     <div class="col-xs-4">
-      <form>
+      <form [formGroup]="searchForm">
 
         <h3 class="mb-4">Search</h3>
 
@@ -11,62 +11,59 @@
 
           <label for="author" class="col-sm-3 col-form-label">Author</label>
           <div class="col-sm-7">
-            <input class="form-control" id="author">
+            <input class="form-control" id="author" formControlName="author">
           </div>
 
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row ">
 
-          <label for="title" class="col-sm-3 col-form-label">Title</label>
-          <div class="col-sm-7">
-            <input class="form-control" id="title">
+          <label for="title " class="col-sm-3 col-form-label ">Title</label>
+          <div class="col-sm-7 ">
+            <input class="form-control " id="title" formControlName="title">
           </div>
 
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row ">
 
-          <label for="isbn" class="col-sm-3 col-form-label">ISBN</label>
-          <div class="col-sm-7">
-            <input class="form-control" id="isbn">
+          <label for="isbn " class="col-sm-3 col-form-label ">ISBN</label>
+          <div class="col-sm-7 ">
+            <input class="form-control " id="isbn" formControlName="isbn">
           </div>
 
         </div>
 
-        <div class="form-group row">
-          <label for="format" class="col-sm-3 col-form-label">Format</label>
-          <div class="col-sm-7">
-            <select class="form-control" id="format">
+        <div class="form-group row ">
+          <label for="format " class="col-sm-3 col-form-label ">Format</label>
+          <div class="col-sm-7 ">
+            <select class="form-control " id="format " formControlName="formatId">
+              <option></option>
               <option>All</option>
-              <option>Paperback</option>
-              <option>Hardcover</option>
-              <option>Audiobook</option>
-              <option>Leather Bound</option>
-              <option>Spiral Bound</option>
+              <option *ngFor="let format of formats" [ngValue]="format.name ">{{format.name}}</option>
             </select>
           </div>
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row ">
 
-          <div class="col">
-            <div class="row">
+          <div class="col ">
+            <div class="row ">
 
-              <label for="page-min" class="col-sm-6 col-form-label">Pages between</label>
-              <div class="col-sm-6">
-                <input class="form-control" id="page-min">
+              <label for="page-min " class="col-sm-6 col-form-label ">Pages between</label>
+              <div class="col-sm-6 ">
+                <input class="form-control " id="page-min " formControlName="pageMin">
               </div>
 
             </div>
           </div>
 
-          <div class="col">
-            <div class="row">
+          <div class="col ">
+            <div class="row ">
 
-              <label  class="col-sm-2 col-form-label text-center" for="page-max">and</label>
-              <div class="col-sm-6">
-                <input class="form-control" id="page-max">
+              <label class="col-sm-2 col-form-label text-center " for="page-max ">and</label>
+              <div class="col-sm-6 ">
+                <input class="form-control " id="page-max " formControlName="pageMax">
               </div>
 
             </div>
@@ -74,25 +71,25 @@
 
         </div>
 
-        <div class="form-group row">
+        <div class="form-group row ">
 
-          <div class="col">
-            <div class="row">
+          <div class="col ">
+            <div class="row ">
 
-              <label for="price-min" class="col-sm-6 col-form-label">Price between</label>
-              <div class="col-sm-6">
-                <input class="form-control" id="price-min">
+              <label for="price-min " class="col-sm-6 col-form-label ">Price between</label>
+              <div class="col-sm-6 ">
+                <input class="form-control " id="price-min " formControlName="priceMin">
               </div>
 
             </div>
           </div>
 
-          <div class="col">
-            <div class="row">
+          <div class="col ">
+            <div class="row ">
 
-              <label  class="col-sm-2 col-form-label text-center" for="price-max">and</label>
-              <div class="col-sm-6">
-                <input class="form-control" id="price-max">
+              <label class="col-sm-2 col-form-label text-center " for="price-max ">and</label>
+              <div class="col-sm-6 ">
+                <input class="form-control " id="price-max " formControlName="priceMax">
               </div>
 
             </div>
@@ -103,8 +100,15 @@
       </form>
     </div>
 
-    <div class="col-xs-8">
-      <h3 class="mb-4">List of Matched Books</h3>
+    <div class="col-xs-8 ">
+      <h3 class="mb-4 ">List of Matched Books</h3>
+      <div *ngIf="booksList">
+        <ul *ngFor="let book of booksList; let i = index">
+          <a [routerLink]=" [ '/book/' + book._id ] " [queryParams]="{ 'name': book.title} "><li>{{i+1}}.<span></span>{{book.title}},
+              {{book.author}}
+            </li></a>
+        </ul>
+      </div>
     </div>
 
   </div>

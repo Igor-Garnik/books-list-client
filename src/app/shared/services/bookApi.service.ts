@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { map, catchError } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs/Observable';
 import { forkJoin } from 'rxjs/observable/forkJoin';
-import { _throw } from 'rxjs/observable/throw';
 import { Book } from '../models/book';
 import { Format } from '../models/format';
 @Injectable()
@@ -17,23 +16,20 @@ export class BookApiService {
 
   getBooksList(): Observable<any> {
     return this.http.get(`${this.localApiUrl}/books`, { headers: this.setHeaders() })
-      .pipe(
-        catchError((err: HttpErrorResponse) => {
-          if (err.status === 401) {
-            return _throw('Unauthorized');
-          } else {
-            return _throw(err.message);
-          }
-        })
-      )
   }
 
-  /*  getOneBook(id: string): Observable<any> {
-     return this.http.get(`${this.localApiUrl}/books/search?id=${id}`, { headers: this.setHeaders() })
-   } */
-
-  getOneBook(id: string): Observable<any> {
+  getBookByIb(id: string): Observable<any> {
     return this.http.get(`${this.localApiUrl}/books/search?id=${id}`, { headers: this.setHeaders() })
+  }
+
+  getBookByQuery(query: any): Observable<any> {
+    const options = { headers: this.setHeaders() }
+    return this.http.post(`${this.localApiUrl}/books/search`, query, options)
+  }
+
+  addBook(book): Observable<any> {
+    const options = { headers: this.setHeaders() }
+    return this.http.post(`${this.localApiUrl}/books/post`, book, options);
   }
 
   setHeaders() {
@@ -56,13 +52,14 @@ export class BookApiService {
     )
   }
 
-  addBook(book): Observable<any> {
-    const options = { headers: this.setHeaders() }
-    return this.http.post(`${this.localApiUrl}/books/post`, { newBook: book }, options);
-  }
+
 
   getBookFormat(id: String): Observable<any> {
     return this.http.get(`${this.localApiUrl}/formats/search?id=${id}`, { headers: this.setHeaders() })
+  }
+
+  getFormats(): Observable<any> {
+    return this.http.get(`${this.localApiUrl}/formats/`, { headers: this.setHeaders() })
   }
 
 }
