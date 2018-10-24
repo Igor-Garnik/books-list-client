@@ -41,6 +41,35 @@ export class BookComponent implements OnInit, OnDestroy {
     companyId: ''
   }
 
+  validationMessages = {
+    'author': {
+      'required': 'The field can not be empty',
+      'pattern': 'Wrong format'
+    }, 'title': {
+      'required': 'The field can not be empty',
+      'pattern': 'Wrong format'
+    }, 'isbn': {
+      'required': 'The field can not be empty',
+      'pattern': 'The field must contains only numbers, min length 9 numbers'
+    }, 'pages': {
+      'required': 'The field can not be empty',
+      'pattern': 'The field must contains only numbers'
+    }, 'formatId': {
+      'required': 'The field can not be empty'
+    }, 'description': {
+      'required': 'The field can not be empty'
+    }, 'price': {
+      'required': 'The field can not be empty',
+      'pattern': 'The field must contains only numbers'
+    }, 'countryId': {
+      'required': 'The field can not be empty'
+    }, 'cityId': {
+      'required': 'The field can not be empty'
+    }, 'companyId': {
+      'required': 'The field can not be empty'
+    }
+  }
+
   constructor(
     private route: ActivatedRoute,
     private bookApiService: BookApiService,
@@ -55,7 +84,6 @@ export class BookComponent implements OnInit, OnDestroy {
         let bookId = params.get('id')
         if (!bookId) {
           this.loadBooksAttributes();
-
         } else {
           this.bookApiService.getBookByIb(bookId)
             .subscribe((book: Array<Book>) => {
@@ -82,13 +110,28 @@ export class BookComponent implements OnInit, OnDestroy {
 
   buildForm() {
     this.newBookForm = this.fb.group({
-      author: ['', Validators.required],
-      title: ['', Validators.required],
-      isbn: ['', Validators.required],
-      pages: ['', Validators.required],
+      author: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z+\s]+$/)
+      ]],
+      title: ['', [
+        Validators.required,
+        Validators.pattern(/^[a-zA-Z0-9+\s+.]+$/)
+      ]],
+      isbn: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]{9,}$/)
+      ]],
+      pages: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]{1,4}$/)
+      ]],
       formatId: ['', Validators.required],
       description: ['', Validators.required],
-      price: ['', Validators.required],
+      price: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]{1,}$/)
+      ]],
       countryId: ['', Validators.required],
       cityId: ['', Validators.required],
       companyId: ['', Validators.required]
@@ -96,20 +139,11 @@ export class BookComponent implements OnInit, OnDestroy {
   }
 
   submit() {
-    let bookParams = this.newBookForm.value;
-    if (!this.newBookForm) return;
-
-    for (let item in this.formErrors) {
-      this.formErrors[item] = "";
-      let control = this.newBookForm.get(item);
-
-      if (control && !control.dirty && !control.valid) {
-        this.formErrors[item] = "The field can not be empty"
-      }
-    }
-    if (this.newBookForm.valid) {
+    if (!this.newBookForm.valid) {
+      this.formErrors = Object.assign({}, this.utilsService.setErrorMessage(this.formErrors, this.validationMessages, this.newBookForm));
+    } else {
       let completedBok: Book = this.utilsService.setIds(
-        bookParams, [
+        this.newBookForm.value, [
           { name: "countryId", value: this.countries },
           { name: "companyId", value: this.companies, },
           { name: "cityId", value: this.cities },

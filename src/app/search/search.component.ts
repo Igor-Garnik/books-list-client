@@ -11,19 +11,23 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
   selector: 'app-search',
   templateUrl: './search.component.html',
   styleUrls: ['./search.component.css'],
-  /*   styles: [
-      'span {padding-left:10px;}',
-      'a { text-decoration: none; color: black; }',
-      'a:hover {color: #3652af}',
-      'li {list-style: none;}'
-    ] */
 })
 export class SearchComponent implements OnInit, OnDestroy {
 
   formats: Array<Format> = [];
-  booksList: Array<Book> = [];
+  booksList: Book;
   querySubscription: Subscription;
   searchForm: FormGroup;
+  fields = {
+    author: '',
+    title: '',
+    isbn: '',
+    formatId: '',
+    pageMin: '',
+    pageMax: '',
+    priceMin: '',
+    priceMax: ''
+  }
 
   constructor(
     private bookApiService: BookApiService,
@@ -45,22 +49,17 @@ export class SearchComponent implements OnInit, OnDestroy {
           return;
         } else {
           this.bookApiService.getBookByQuery(query)
-            .subscribe((data: Array<Book>) => this.booksList = data);
+            .subscribe((book) => {
+              this.booksList = Object.assign({}, book);
+              this.fields = Object.assign({}, book);
+              this.searchForm = this.fb.group(this.fields);
+            });
         }
       })
   }
 
   buildForm() {
-    this.searchForm = this.fb.group({
-      author: '',
-      title: '',
-      isbn: '',
-      formatId: '',
-      pageMin: '',
-      pageMax: '',
-      priceMin: '',
-      priceMax: ''
-    });
+    this.searchForm = this.fb.group(this.fields);
     this.searchForm.valueChanges
       .pipe(
         debounceTime(1000)

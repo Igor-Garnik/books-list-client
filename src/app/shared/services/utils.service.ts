@@ -47,4 +47,24 @@ export class UtilsService {
     })
     return bookCopy
   }
+
+  setErrorMessage(formErrors, validationMessages, newBookForm): any {
+    let formErr = Object.assign({}, formErrors);
+    for (let item in formErr) {
+      formErr[item] = "";
+      let control = newBookForm.get(item);
+
+      if (!control.valid) {
+        let message = validationMessages[item];
+        for (let key in control.errors) {
+          formErr[item] += message[key];
+        }
+      }
+    }
+    return formErr;
+  }
+
+  fillFields() {
+
+  }
 }

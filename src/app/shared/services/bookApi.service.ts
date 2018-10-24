@@ -25,6 +25,9 @@ export class BookApiService {
   getBookByQuery(query: any): Observable<any> {
     const options = { headers: this.setHeaders() }
     return this.http.post(`${this.localApiUrl}/books/search`, query, options)
+      .pipe(
+        map(data => data[0])
+      )
   }
 
   addBook(book): Observable<any> {
