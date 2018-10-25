@@ -15,14 +15,30 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 export class SearchComponent implements OnInit, OnDestroy {
 
   formats: Array<Format> = [];
-  booksList: Book;
+  findedBook: Book;
   querySubscription: Subscription;
   searchForm: FormGroup;
-  fields = {
+  validationMessages = {
+    'author': {
+      'pattern': 'Wrong format'
+    }, 'title': {
+      'pattern': 'Wrong format'
+    }, 'isbn': {
+      'pattern': 'The field must contains only numbers, min length 9 numbers'
+    }, 'pageMin': {
+      'pattern': 'Wrong format'
+    }, 'pageMax': {
+      'pattern': 'Wrong format'
+    }, 'priceMin': {
+      'pattern': 'Wrong format'
+    }, 'priceMax': {
+      'required': 'The field can not be empty'
+    }
+  };
+  formErrors = {
     author: '',
     title: '',
     isbn: '',
-    formatId: '',
     pageMin: '',
     pageMax: '',
     priceMin: '',
@@ -46,20 +62,35 @@ export class SearchComponent implements OnInit, OnDestroy {
     this.querySubscription = this.route.queryParams
       .subscribe((query: any) => {
         if (JSON.stringify(query) == "{}") {
+          this.findedBook = null;
+          this.searchForm = this.searchForm = this.fb.group(this.createForm());
           return;
         } else {
           this.bookApiService.getBookByQuery(query)
             .subscribe((book) => {
-              this.booksList = Object.assign({}, book);
-              this.fields = Object.assign({}, book);
-              this.searchForm = this.fb.group(this.fields);
+              this.findedBook = book;
+              this.searchForm = this.fb.group(this.utilsService.completeFormFields(this.searchForm, book));
             });
         }
       })
   }
 
+  createForm() {
+    return {
+      author: ['', Validators.pattern(/^[a-zA-Z+\s]+$/)],
+      title: ['', Validators.pattern(/^[a-zA-Z0-9+\s+.]+$/)],
+      isbn: ['', Validators.pattern(/^[0-9]{9,}$/)],
+      formatId: [''],
+      pageMin: ['', Validators.pattern(/^[0-9]{1,}$/)],
+      pageMax: ['', Validators.pattern(/^[0-9]{1,}$/)],
+      priceMin: ['', Validators.pattern(/^[0-9]{1,}$/)],
+      priceMax: ['', Validators.pattern(/^[0-9]{1,}$/)],
+
+    }
+  }
+
   buildForm() {
-    this.searchForm = this.fb.group(this.fields);
+    this.searchForm = this.fb.group(this.createForm());
     this.searchForm.valueChanges
       .pipe(
         debounceTime(1000)
@@ -68,8 +99,18 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onValueChange() {
-    let complitedData = this.utilsService.getComplitedData(this.searchForm.value, this.formats);
-    this.router.navigate(['/search'], { queryParams: complitedData })
+    let validationConfig = { name: 'dirty' }
+    if (this.searchForm.dirty && this.searchForm.invalid) {
+      this.formErrors = Object.assign({}, this.utilsService.setErrorMessage(this.formErrors, this.validationMessages, this.searchForm, validationConfig));
+      console.log("this.formErrors ", this.formErrors);
+      this.findedBook = null;
+    } else {
+      let complitedData = this.utilsService.getComplitedData(this.searchForm.value, this.formats);
+      console.log("complitedData ", complitedData);
+      this.router.navigate(['/search'], { queryParams: complitedData });
+      this.formErrors = Object.assign({}, this.utilsService.clearFormFields(this.formErrors));
+    }
+
   }
 
   ngOnInit() {

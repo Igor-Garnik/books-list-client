@@ -48,13 +48,13 @@ export class UtilsService {
     return bookCopy
   }
 
-  setErrorMessage(formErrors, validationMessages, newBookForm): any {
+  setErrorMessage(formErrors, validationMessages, newBookForm, config): any {
     let formErr = Object.assign({}, formErrors);
     for (let item in formErr) {
       formErr[item] = "";
       let control = newBookForm.get(item);
 
-      if (!control.valid) {
+      if (control[config.name]) {
         let message = validationMessages[item];
         for (let key in control.errors) {
           formErr[item] += message[key];
@@ -64,7 +64,19 @@ export class UtilsService {
     return formErr;
   }
 
-  fillFields() {
+  clearFormFields(form): any {
+    let copyFormFields = Object.assign({}, form);
+    for (let key in copyFormFields) {
+      copyFormFields[key] = '';
+    }
+    return copyFormFields;
+  }
 
+  completeFormFields(formFields, data): any {
+    let form = Object.assign({}, formFields._value);
+    for (let key in form) {
+      form[key] = data[key];
+    }
+    return form;
   }
 }

@@ -140,7 +140,8 @@ export class BookComponent implements OnInit, OnDestroy {
 
   submit() {
     if (!this.newBookForm.valid) {
-      this.formErrors = Object.assign({}, this.utilsService.setErrorMessage(this.formErrors, this.validationMessages, this.newBookForm));
+      let validationConfig = { name: 'invalid' }
+      this.formErrors = Object.assign({}, this.utilsService.setErrorMessage(this.formErrors, this.validationMessages, this.newBookForm, validationConfig));
     } else {
       let completedBok: Book = this.utilsService.setIds(
         this.newBookForm.value, [
