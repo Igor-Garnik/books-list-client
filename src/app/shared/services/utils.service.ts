@@ -73,10 +73,13 @@ export class UtilsService {
   }
 
   completeFormFields(formFields, data): any {
-    let form = Object.assign({}, formFields._value);
+    let form = Object.assign({}, formFields);
     for (let key in form) {
-      form[key] = data[key];
+      form[key][0] = data[key] ? data[key] : '';
+      //form[key][0] = data[key];
     }
+    console.log(formFields);
+    console.log(form);
     return form;
   }
 }

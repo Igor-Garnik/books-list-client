@@ -17,7 +17,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   formats: Array<Format> = [];
   findedBook: Book;
   querySubscription: Subscription;
-  searchForm: FormGroup;
+  searchForm: any;
   validationMessages = {
     'author': {
       'pattern': 'Wrong format'
@@ -63,13 +63,14 @@ export class SearchComponent implements OnInit, OnDestroy {
       .subscribe((query: any) => {
         if (JSON.stringify(query) == "{}") {
           this.findedBook = null;
-          this.searchForm = this.searchForm = this.fb.group(this.createForm());
+          //this.searchForm = this.searchForm = this.fb.group(this.createForm());
           return;
         } else {
           this.bookApiService.getBookByQuery(query)
             .subscribe((book) => {
               this.findedBook = book;
-              this.searchForm = this.fb.group(this.utilsService.completeFormFields(this.searchForm, book));
+              let completedForm = this.utilsService.completeFormFields(this.createForm(), book);
+              this.searchForm = this.fb.group(completedForm);
             });
         }
       })
@@ -99,6 +100,7 @@ export class SearchComponent implements OnInit, OnDestroy {
   }
 
   onValueChange() {
+    console.log('value changed')
     let validationConfig = { name: 'dirty' }
     if (this.searchForm.dirty && this.searchForm.invalid) {
       this.formErrors = Object.assign({}, this.utilsService.setErrorMessage(this.formErrors, this.validationMessages, this.searchForm, validationConfig));
